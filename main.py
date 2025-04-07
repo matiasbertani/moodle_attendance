@@ -24,14 +24,15 @@ def send_attendance():
 
     with requests.Session() as s:
 
-        r = s.get(MOODLE_URL)
+        login_url = MOODLE_URL + "/login/index.php"
+        r = s.get(login_url)
         login_token = bs4.BeautifulSoup(r.text).find('input', {'name': 'logintoken'}).get('value')
         login_payload = {
             'username': MOODLE_USERNAME,
             'password': MOODLE_PASSWORD,
             'logintoken': login_token
         }
-        s.post(MOODLE_URL, data=login_payload)
+        s.post(login_url, data=login_payload)
 
         r = s.get(MOODLE_URL + f"/mod/attendance/view.php?id={MOODLE_ATTENDANCE_ID}&view=5")
 
